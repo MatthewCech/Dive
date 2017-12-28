@@ -150,6 +150,7 @@ namespace Commands
 }
 
 // Application entry point.
+/*
 int main()
 {
   // Build manager. Note: Good kind of thing to read from a file!
@@ -184,6 +185,7 @@ int main()
 
   return 1;
 }
+*/
 
 
   //////////////////////////
