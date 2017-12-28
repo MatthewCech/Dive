@@ -13,10 +13,11 @@
 int main(int argc, char** argv)
 {
   // Engine initialization
+  Engine e;
   Engine::Instance->Add<ManagerInput>();
   Engine::Instance->Add<ManagerEntity>();
   Engine::Instance->Add<ManagerGraphics>();
-
+  Engine::Instance->Get<ManagerGraphics>();
   // Primary Loop
   while (Engine::Instance->Update()) { break; }
 

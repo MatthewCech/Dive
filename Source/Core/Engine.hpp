@@ -2,6 +2,9 @@
 #include "ManagerBase.hpp"
 #include <vector>
 #include <typeinfo>
+#include <typeindex>
+#include "Alert.hpp"
+#include <unordered_map>
 
 
 class Engine
@@ -25,7 +28,8 @@ private:
   void verifyInit();
 
   // Private variables
-  std::vector<ManagerBase *> _managers;
+  std::vector<ManagerBase *> _managersOrdered;
+  std::unordered_map<std::type_index, ManagerBase *> _managers;
 };
 
 
@@ -39,7 +43,13 @@ void Engine::Add()
   verifyInit();
   T *m = new T(); 
   m->Init(); 
-  Instance->_managers.push_back(m); 
+  
+  auto iter = Instance->_managers.find(typeid(T));
+  if(iter != Instance->_managers.end())
+    AlertMessage(L"You are trying to add two of the same type of manager!\nThis may cause unexpected Behavior. Continue?");
+
+  Instance->_managers[typeid(T)] = m;
+  Instance->_managersOrdered.push_back(m);
 }
 
 // Acceptable, w/ <10 items to iterate over.
@@ -48,7 +58,5 @@ template<typename T>
 T *Engine::Get()
 {
   verifyInit();
-  for (int i = 0; i < Instance->_managers.size(); ++i)
-    if (typeid(T) == typeid(*(Instance->_managers[i])))
-      return Instance->_managers[i];
+  return static_cast<T*>(Instance->_managersOrdered.find(typeid(T)));
 }

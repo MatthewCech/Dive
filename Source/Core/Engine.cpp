@@ -1,5 +1,4 @@
 #include "Engine.hpp"
-#include "Alert.hpp"
 #include "Structures/UpdateInfo.hpp"
 
 
@@ -8,7 +7,9 @@
  // Ctor/Dtor //
 ///////////////
 Engine * Engine::Instance = nullptr;
-Engine::Engine() : _managers()
+Engine::Engine() 
+  : _managers()
+  , _managersOrdered()
 {
   init();
 }
@@ -24,18 +25,18 @@ Engine::~Engine()
 // Primary engine update. Passes updateInfo object to managers.
 bool Engine::Update()
 {
-  for (size_t i = 0; i < Instance->_managers.size(); ++i)
-    Instance->_managers[i]->Update({ 0.016 });
+  for (size_t i = 0; i < Instance->_managersOrdered.size(); ++i)
+    Instance->_managersOrdered[i]->Update({ 0.016 });
 
   return true;
 }
 
 void Engine::Shutdown()
 {
-  while (_managers.size() > 0)
+  while (_managersOrdered.size() > 0)
   {
-    ManagerBase *m = _managers.back();
-    _managers.pop_back();
+    ManagerBase *m = _managersOrdered.back();
+    _managersOrdered.pop_back();
     m->Shutdown();
     delete m;
   }
@@ -50,7 +51,7 @@ void Engine::init()
   if (Instance == nullptr)
     Instance = this;
   else
-    AlertMessage(L"Attempted to re-create the engine!");
+    AlertMessage(L"Attempted to re-create the engine! Continue?");
 }
 
 void Engine::verifyInit()

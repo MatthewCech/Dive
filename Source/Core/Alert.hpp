@@ -7,7 +7,7 @@
 #endif
 
 // Alerts a message. If answer is to break from user, do so.
-void AlertMessage(const wchar_t* str)
+inline void AlertMessage(const wchar_t* str)
 {
   int toEval = 0;
 #ifdef _WIN32
