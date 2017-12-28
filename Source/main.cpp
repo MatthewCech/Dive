@@ -8,6 +8,7 @@
 #include "Core/ManagerInput.hpp"
 #include "Core/ManagerEntity.hpp"
 #include "Core/ManagerGraphics.hpp"
+#include "Core/ManagerWorld.hpp"
 
 
 int main(int argc, char** argv)
@@ -15,9 +16,9 @@ int main(int argc, char** argv)
   // Engine initialization
   Engine e;
   Engine::Instance->Add<ManagerInput>();
+  Engine::Instance->Add<ManagerWorld>();
   Engine::Instance->Add<ManagerEntity>();
   Engine::Instance->Add<ManagerGraphics>();
-  Engine::Instance->Get<ManagerGraphics>();
   // Primary Loop
   while (Engine::Instance->Update()) { break; }
 

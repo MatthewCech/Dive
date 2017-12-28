@@ -118,8 +118,9 @@ std::vector<Floop *> MyFunction(Derp derp, Floop *floop)
 #### Varaible and Function Naming
 Variables and functions should be named appropriately without being abbreviated to the point of not being able to understand them. When it doubt, make the name longer and more descriptive. For example, 'a_' is not a reasonable variable name if you are using it for something like sound amplitude, whereas 'amplitude_' is more appropriate. 
 
-#### File Naming
+#### File Naming and Formatting
 - Header files should use the `.hpp` extension unless you are explicity able to compile the file in `C`, at which point the `.h` extension is appropriate.
 - Template implementation should be placed in a `.tpp` file, then included at the bottom of the corresponding header file.
 - Files aside from `main.cpp` should be capitalized.
 - No spaces in filenames. Spaces can add unnecessary complications when trying to write out a path.
+- Each header file should have a corresponding `.cpp` file that includes it. Not every `.cpp`/`.tpp` file needs a corresponding header.

@@ -1,3 +1,3 @@
 # DIVE
 
-Welcome to an ASCII Jam!
+Dive into a hacked together roguelike!

@@ -8,5 +8,5 @@ class Entity;
 struct Tile
 {
   TileVisual Visual;
-  std::unordered_map<ID, Entity> TileContents;
+  std::unordered_map<ID_Entity, Entity> TileContents;
 };
