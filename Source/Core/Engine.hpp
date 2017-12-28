@@ -58,5 +58,5 @@ template<typename T>
 T *Engine::Get()
 {
   verifyInit();
-  return static_cast<T*>(Instance->_managersOrdered.find(typeid(T)));
+  return static_cast<T*>(Instance->_managers.find(typeid(T))->second);
 }

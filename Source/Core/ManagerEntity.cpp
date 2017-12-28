@@ -1,0 +1,1 @@
+#include "Core/ManagerEntity.hpp"
