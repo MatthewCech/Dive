@@ -1,10 +1,9 @@
 #pragma once
 #include "Core/ManagerBase.hpp"
-#include "RUtils/RMacros.hpp"
+#include "Structures/Typedefs.hpp"
 
 
-
-class ManagerInput : public ManagerBase
+class ManagerWorld : public ManagerBase
 {
 public:
   void Init() { DEBUG_PRINT(__FUNCDNAME__); }

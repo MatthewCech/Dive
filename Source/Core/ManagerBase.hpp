@@ -1,6 +1,6 @@
 #pragma once
 #include "Structures/UpdateInfo.hpp"
-
+#include "RUtils/RMacros.hpp"
 
 
 class ManagerBase

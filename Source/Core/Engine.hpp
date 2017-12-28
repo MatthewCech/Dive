@@ -1,10 +1,10 @@
 #pragma once
-#include "ManagerBase.hpp"
 #include <vector>
 #include <typeinfo>
 #include <typeindex>
-#include "Alert.hpp"
 #include <unordered_map>
+#include "ManagerBase.hpp"
+#include "Alert.hpp"
 
 
 class Engine
@@ -36,6 +36,7 @@ private:
   //////////////////////////////
  // Template implementations //
 //////////////////////////////
+// Consider moving to Engine.tpp
 // Add item, make before additon to initialize.
 template<typename T> 
 void Engine::Add() 
