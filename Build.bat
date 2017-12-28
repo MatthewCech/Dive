@@ -12,6 +12,14 @@ echo -- [ BUILDING ] --
 cd Build
 echo Building...
 call build_vs2017.bat
+cd ..
+
+echo.
+echo.
+echo -- [ MOVING RESOURCES ] --
+echo Note: Manual resource updates will need to be re-added with the batch file BuildResources.bat
+echo Building...
+call BuildResources.bat
 
 echo.
 echo.
