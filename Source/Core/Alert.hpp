@@ -1,20 +1,19 @@
 #pragma once
 #include <string>
 #include <RUtils/RMacros.hpp>
-#include <RUtils/RException.hpp>
 
 #ifdef _WIN32
   #include <Windows.h>
 #endif
 
 // Alerts a message. If answer is to break from user, do so.
-void AlertMessage(std::string str)
+void AlertMessage(const wchar_t* str)
 {
   int toEval = 0;
 #ifdef _WIN32
   int retVal = MessageBox(
     NULL,
-    (LPCWSTR)str.c_str(),
+    (LPCWSTR)str,
     (LPCWSTR)L"Engine Error",
     MB_ICONWARNING | MB_YESNO | MB_DEFBUTTON1
   );
@@ -25,6 +24,6 @@ void AlertMessage(std::string str)
   DEBUG_PRINT(str);
   retVal = 0;
 #endif
-  if(toEval != 0)
-    throw RUtils::RException(str);
+  if (toEval != 0)
+    throw str;
 }
