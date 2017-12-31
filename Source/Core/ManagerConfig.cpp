@@ -4,9 +4,40 @@
 #include "Core/Alert.hpp"
 #include "Utils/UtilsString.hpp"
 #include "Utils/UtilsFiles.hpp"
+#include "Structures/Typedefs.hpp"
 
 
-static std::unordered_map<std::string, RConsole::Color> colorLookup
+void ManagerConfig::Init()
+{
+  _values = ParseResourceFile("general.conf");
+  requireKey(KEY_GENERAL_START_MAP);
+  requireKey(KEY_GENERAL_PLAYER_ASCII);
+  requireKey(KEY_GENERAL_PLAYER_ASCII_COLOR);
+}
+
+  ////////////////////////
+ // Value manupulation //
+////////////////////////
+// Convert values to a type and hand them back, or set values with a new string.
+
+void ManagerConfig::SetValue(const std::string &key, std::string value)
+{
+  _values[key] = value;
+}
+std::string ManagerConfig::GetValueAsString(const std::string &key)
+{
+  if (_values.find(key) == _values.end())
+    return "";
+  return _values[key];
+}
+double ManagerConfig::GetValueAsDouble(const std::string &key)
+{
+  if (_values.find(key) == _values.end())
+    return 0;
+  return std::stod(_values[key]);
+}
+
+static std::unordered_map<std::string, RConsole::Color> _colorLookup;
 {
   { "black", RConsole::BLACK },
   { "blue", RConsole::BLUE },
@@ -26,7 +57,7 @@ static std::unordered_map<std::string, RConsole::Color> colorLookup
   { "white", RConsole::WHITE }
 };
 
-// Gets character as color. If character is not found, we 
+// Gets character as color. If character is not found, we return a default.
 RConsole::Color ManagerConfig::GetCharAsColor(char val) const
 {
   std::string str = " ";
@@ -34,38 +65,22 @@ RConsole::Color ManagerConfig::GetCharAsColor(char val) const
   auto iter = _values.find(str);
   if (iter != _values.end())
   {
-    auto colorIter = colorLookup.find(iter->second);
-    if (colorIter != colorLookup.end())
+    auto colorIter = _colorLookup.find(iter->second);
+    if (colorIter != _colorLookup.end())
       return colorIter->second;
   }
 
   return RConsole::WHITE;
 }
 
-void ManagerConfig::Init()
-{
-  _values = ParseResourceFile("general.conf");
-}
 
-
-  ////////////////////////
- // Value manupulation //
-////////////////////////
-void ManagerConfig::SetValue(const std::string &key, std::string value)
+  //////////////////////////
+ // Private member funcs //
+//////////////////////////
+// Require that _values has a certain key it it.
+void ManagerConfig::requireKey(std::string key)
 {
-  _values[key] = value;
-}
-
-std::string ManagerConfig::GetValueAsString(const std::string &key)
-{
-  if (_values.find(key) == _values.end())
-    return "";
-  return _values[key];
-}
-
-double ManagerConfig::GetValueAsDouble(const std::string &key)
-{
-  if (_values.find(key) == _values.end())
-    return 0;
-  return std::stod(_values[key]);
+  auto iter = _values.find(key);
+  if (iter == _values.end())
+    AlertMessage("The required key " + key + " is not properly formatted  or\ndoes not exist in in general.conf!\nContinue anyways?");
 }

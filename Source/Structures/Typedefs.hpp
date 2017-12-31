@@ -7,7 +7,9 @@ typedef std::string ID_Map;
 typedef std::string ID_Room;
 
 
-#define GENERAL_START_MAP_KEY "startingmap"
-#define MAP_START "spawn"
-#define MAP_WIDTH "width"
-#define MAP_HEIGHT "height"
+#define KEY_GENERAL_START_MAP "startingmap"
+#define KEY_GENERAL_PLAYER_ASCII "playersymbol"
+#define KEY_GENERAL_PLAYER_ASCII_COLOR "playersymbolcolor"
+#define KEY_MAP_START "spawn"
+#define KEY_MAP_WIDTH "width"
+#define KEY_MAP_HEIGHT "height"
