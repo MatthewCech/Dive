@@ -107,14 +107,13 @@ void ManagerWorld::loadMaps()
         std::unordered_map<std::string, std::string> parsed = ParseResourceFile(name);
         U_Lowercase(name);
 
-        const char spawn[] = "spawn";
-        verifyKey("width", name, parsed);
-        verifyKey("height", name, parsed);
-        verifyKey(spawn, name, parsed); // perhaps not required...
+        verifyKey(MAP_WIDTH, name, parsed);
+        verifyKey(MAP_HEIGHT, name, parsed);
+        verifyKey(MAP_START, name, parsed); // perhaps not required...
 
-        auto iter = _rooms.find(parsed[spawn]);
+        auto iter = _rooms.find(parsed[MAP_START]);
         if (iter == _rooms.end())
-          AlertMessage("The specified room, " + parsed[spawn] + ", could not be found!\n Please verify that .room file is in the resources folder!\nTry to continue?");
+          AlertMessage("The specified room, " + parsed[MAP_START] + ", could not be found!\n Please verify that .room file is in the resources folder!\nTry to continue?");
 
         // get specific values then initialize.
         double width = std::stod(parsed["width"]);

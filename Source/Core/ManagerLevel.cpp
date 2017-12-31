@@ -3,10 +3,14 @@
 #include "Core/Alert.hpp"
 #include "Core/Engine.hpp"
 #include "Core/ManagerWorld.hpp"
+#include "Core/ManagerConfig.hpp"
+#include "Structures/Typedefs.hpp"
 
 void ManagerLevel::Init()
 {
-  Engine::Instance->Get<ManagerWorld>();
+  const std::string &start_map = Engine::Instance->Get<ManagerConfig>()->GetValueAsString(GENERAL_START_MAP_KEY);
+  _maps.push_back(Engine::Instance->Get<ManagerWorld>()->GetMap(start_map));
+  _currentMap = 0;
 }
 
 void ManagerLevel::AddMap(const Map &rhs)
