@@ -5,7 +5,8 @@
 #include "Utils/UtilsString.hpp"
 #include "Core/Alert.hpp"
 #include "Utils/UtilsFiles.hpp"
-
+#include "Core/Engine.hpp"
+#include "Core/ManagerConfig.hpp"
 
 // filesystem namespace for this file. Used because it is currently experiemntal.
 namespace fs = std::experimental::filesystem;
@@ -25,6 +26,8 @@ void ManagerWorld::Init()
 
 void ManagerWorld::loadRooms()
 {
+  const ManagerConfig* mconf = Engine::Instance->Get<ManagerConfig>();
+
   for (auto &dirEntry : fs::directory_iterator("Resources/"))
   {
     // Confirm the file has an extension. This is what we'll be going for regardless of OS.
@@ -80,6 +83,8 @@ void ManagerWorld::loadRooms()
           {
             room.Tiles[x][y].RawRepresentation = lines[y][x];
             room.Tiles[x][y].Visual.ASCII = lines[y][x];
+            char c = room.Tiles[x][y].Visual.ASCII;
+            room.Tiles[x][y].Visual.ASCIIColor = mconf->GetCharAsColor(c);
           }
 
         _rooms[name] = room;

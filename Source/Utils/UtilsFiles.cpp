@@ -35,7 +35,31 @@ std::unordered_map<std::string, std::string> ParseResourceFile(std::string filen
 
     std::string left = buffer.substr(0, colonLoc);
     std::string right = buffer.substr(colonLoc + 1);
-    map[U_Lowercase(left)] = U_Lowercase(right);
+    
+    if (left.size() == 0)
+    {
+      AlertMessage("There is a value without a key in " + filename + "!\nThis can cause issues. Skip and continue?");
+      continue;
+    }
+    else if (right.size() == 0)
+    {
+      AlertMessage("There is a key without a value in " + filename + "!\nThis can cause issues. Skip and continue?");
+      continue;
+    }
+
+    // Handle character parsing.
+    bool OmitLowercaseLeft = false;
+    if (left.size() > 2)
+      if (left[0] == '\'' && left[2] == '\'')
+      {
+        OmitLowercaseLeft = true;
+        left = left[1];
+      }
+
+    if(!OmitLowercaseLeft)
+      map[U_Lowercase(left)] = U_Lowercase(right);
+    else
+      map[left] = U_Lowercase(right);
   }
 
   fileObject.close();
