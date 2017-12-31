@@ -4,6 +4,7 @@
 #include "Core/Engine.hpp"
 #include "Core/ManagerConfig.hpp"
 #include "Structures/Typedefs.hpp"
+#include "Structures/TileFlags.hpp"
 
 
 static RConsole::Color _fadeLookup[RConsole::PREVIOUS_COLOR];
@@ -78,16 +79,22 @@ void ManagerGraphics::Update(UpdateInfo i)
     for (int i = 0; i < roomWidth; ++i)
       for (int j = 0; j < roomHeight; ++j)
       {
+        // Value collection
         const Tile &tile = r.first.Tiles[i][j];
-        const TileVisual &t = tile.Visual;
+        const TileVisual &tileVisual = tile.Visual;
+        char ascii = tileVisual.ASCII;
 
-        if(t)
-        if(_subWalls)
-        RConsole::Color color = t.ASCIIColor;
+        // Handle solid wall coloring
+        if ((tile.Flags & TileFlags::WALL) == TileFlags::WALL)
+          if (_subWalls)
+            ascii = static_cast<unsigned char>(219);
+
+        // Handle fade coloring
+        RConsole::Color color = tileVisual.ASCIIColor;
         if (insideRoom == false)
           color = _fadeLookup[color];
 
-        RConsole::Canvas::Draw(t.ASCII, static_cast<float>(startPosX + i), static_cast<float>(startPosY + j), color);
+        RConsole::Canvas::Draw(ascii, static_cast<float>(startPosX + i), static_cast<float>(startPosY + j), color);
       }
 
   }

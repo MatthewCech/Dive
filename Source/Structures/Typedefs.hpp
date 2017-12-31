@@ -10,7 +10,7 @@ typedef std::string ID_Room;
 // Keys for general game config
 #define KEY_GENERAL_START_MAP "startingmap"
 #define KEY_GENERAL_PLAYER_ASCII "playersymbol"
-#define KEY_GENERAL_WALLS_AS_219 "WallsAsSolidASCII"
+#define KEY_GENERAL_WALLS_AS_219 "wallsassolidascii"
 
 // Map keys
 #define KEY_MAP_START "spawn"

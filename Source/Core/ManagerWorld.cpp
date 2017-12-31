@@ -154,7 +154,7 @@ Map &ManagerWorld::GetMap(ID_Map m)
 static void AddFlagIfNeeded(ManagerConfig *mconf, Tile &t, std::string key)
 {
   std::string validChars = mconf->GetValueAsString(KEY_GENERAL_FLAG_WALL);
-  for (int i = 0; i < validChars.size(); ++i)
+  for (size_t i = 0; i < validChars.size(); ++i)
     if (validChars[i] == t.RawRepresentation)
       t.Flags |= TileFlags::WALL;
 }
