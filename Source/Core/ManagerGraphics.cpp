@@ -60,7 +60,7 @@ void ManagerGraphics::Update(UpdateInfo i)
   RConsole::Canvas::FillCanvas(RConsole::RasterInfo('`', RConsole::DARKGREY));
 
   // Start by drawing the rooms.
-  for (const std::pair<Room, MapOffset> &r : map.Rooms)
+  for (const std::pair<Room, MapPoint> &r : map.Rooms)
   {
     // Collect some initial values that won't be changing 
     const int startPosX = halfWidth + r.second.X - map.PlayerLoc.X;
