@@ -7,13 +7,15 @@
 #endif
 
 // Alerts a message. If answer is to break from user, do so.
-inline void AlertMessage(const wchar_t* str)
+inline void AlertMessage(std::string str)
 {
+  std::wstring widestr = std::wstring(str.begin(), str.end());
+
   int toEval = 0;
 #ifdef _WIN32
   int retVal = MessageBox(
     NULL,
-    (LPCWSTR)str,
+    (LPCWSTR)widestr.c_str(),
     (LPCWSTR)L"Engine Error",
     MB_ICONWARNING | MB_YESNO | MB_DEFBUTTON1
   );
