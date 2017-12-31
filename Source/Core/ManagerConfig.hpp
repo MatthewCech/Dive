@@ -15,6 +15,7 @@ public:
   void SetValue(const std::string &key, std::string value);
   std::string GetValueAsString(const std::string &key);
   double GetValueAsDouble(const std::string &key);
+  bool GetValueAsBool(const std::string &key);
   RConsole::Color GetCharAsColor(char val) const;
 
 private:

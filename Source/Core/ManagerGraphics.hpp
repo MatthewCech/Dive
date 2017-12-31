@@ -14,4 +14,5 @@ public:
 private:
   size_t _width;
   size_t _height;
+  bool _subWalls;
 };

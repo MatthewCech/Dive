@@ -17,6 +17,7 @@ public:
 private:
   void loadRooms();
   void loadMaps();
+  void addTileFlags(Tile &t);
 
   std::unordered_map<ID_Room, Room> _rooms;
   std::unordered_map<ID_Map, Map> _maps;

@@ -12,14 +12,14 @@ void ManagerConfig::Init()
   _values = ParseResourceFile("general.conf");
   requireKey(KEY_GENERAL_START_MAP);
   requireKey(KEY_GENERAL_PLAYER_ASCII);
-  requireKey(KEY_GENERAL_PLAYER_ASCII_COLOR);
+  requireKey(KEY_GENERAL_WALLS_AS_219);
 }
 
   ////////////////////////
  // Value manupulation //
 ////////////////////////
 // Convert values to a type and hand them back, or set values with a new string.
-
+// All of these will fail safely if the value can not be found.
 void ManagerConfig::SetValue(const std::string &key, std::string value)
 {
   _values[key] = value;
@@ -36,8 +36,14 @@ double ManagerConfig::GetValueAsDouble(const std::string &key)
     return 0;
   return std::stod(_values[key]);
 }
+bool ManagerConfig::GetValueAsBool(const std::string &key)
+{
+  if (_values.find(key) == _values.end())
+    return false;
+  return U_Lowercase(_values[key]) == "true";
 
-static std::unordered_map<std::string, RConsole::Color> _colorLookup;
+}
+static std::unordered_map<std::string, RConsole::Color> _colorLookup
 {
   { "black", RConsole::BLACK },
   { "blue", RConsole::BLUE },

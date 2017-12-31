@@ -7,16 +7,20 @@
 
 enum TileFlags
 {
-  WALL = 0,
+  WALL = 1,
   DOOR = 2,
+  GRASS = 4,
+  WATER = 8
 };
 struct Tile
 {
-  Tile () : RawRepresentation(' '), Visual(), TileContents() {  } 
-  Tile (char representation) : RawRepresentation(representation) {  }
+  // Constructors
+  Tile () : RawRepresentation(' '), Visual(), TileContents(), Flags(0) {  } 
+  Tile (char representation) : RawRepresentation(representation), Flags(0) {  }
   
-  char RawRepresentation;
-  TileVisual Visual;
-  std::unordered_map<ID_Entity, Entity> TileContents;
-
+  // Public member variables
+  char RawRepresentation;                             // The raw ascii representation of the tile. Don't use for lookups.
+  TileVisual Visual;                                  // The tile visual - could be ascii, could be a picture.
+  std::unordered_map<ID_Entity, Entity> TileContents; // Keeps track of entities on a specific tile.
+  size_t Flags;                                       // Keeps track of the type of tile this is.
 };

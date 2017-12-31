@@ -138,3 +138,7 @@ Map &ManagerWorld::GetMap(ID_Map m)
   return _maps[m];
 }
 
+void ManagerWorld::addTileFlags(Tile &t)
+{
+
+}

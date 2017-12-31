@@ -32,6 +32,7 @@ void ManagerGraphics::Init()
   _fadeLookup[RConsole::WHITE] = RConsole::GREY;
 
   RConsole::Canvas::FillCanvas(RConsole::RasterInfo('`', RConsole::DARKGREY));
+  _subWalls = Engine::Instance->Get<ManagerConfig>()->GetValueAsBool(KEY_GENERAL_WALLS_AS_219);
 }
 
 
@@ -77,7 +78,11 @@ void ManagerGraphics::Update(UpdateInfo i)
     for (int i = 0; i < roomWidth; ++i)
       for (int j = 0; j < roomHeight; ++j)
       {
-        const TileVisual &t = r.first.Tiles[i][j].Visual;
+        const Tile &tile = r.first.Tiles[i][j];
+        const TileVisual &t = tile.Visual;
+
+        if(t)
+        if(_subWalls)
         RConsole::Color color = t.ASCIIColor;
         if (insideRoom == false)
           color = _fadeLookup[color];
@@ -88,7 +93,8 @@ void ManagerGraphics::Update(UpdateInfo i)
   }
 
   std::string c = conf->GetValueAsString(KEY_GENERAL_PLAYER_ASCII);
-  RConsole::Canvas::Draw(c[0], static_cast<float>(halfWidth), static_cast<float>(halfHeight), RConsole::WHITE);
+  RConsole::Color color = conf->GetCharAsColor(c[0]);
+  RConsole::Canvas::Draw(c[0], static_cast<float>(halfWidth), static_cast<float>(halfHeight), color);
   RConsole::Canvas::Update();
 }
 
