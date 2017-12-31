@@ -3,9 +3,10 @@
 #include "Core/ManagerLevel.hpp"
 #include "Core/Engine.hpp"
 #include "Core/ManagerConfig.hpp"
+#include "Structures/Typedefs.hpp"
 
-static RConsole::Color colors[RConsole::PREVIOUS_COLOR];
 
+static RConsole::Color _fadeLookup[RConsole::PREVIOUS_COLOR];
 
 void ManagerGraphics::Init()
 {
@@ -13,22 +14,22 @@ void ManagerGraphics::Init()
   _width = WIDTH_FUNC;
   _height = HEIGHT_FUNC;
 
-  colors[RConsole::BLACK] = RConsole::DARKGREY;
-  colors[RConsole::BLUE] = RConsole::DARKGREY;
-  colors[RConsole::GREEN] = RConsole::DARKGREY;
-  colors[RConsole::CYAN] = RConsole::DARKGREY;
-  colors[RConsole::RED] = RConsole::DARKGREY;
-  colors[RConsole::MAGENTA] = RConsole::DARKGREY;
-  colors[RConsole::BROWN] = RConsole::DARKGREY;
-  colors[RConsole::GREY] = RConsole::DARKGREY;
-  colors[RConsole::DARKGREY] = RConsole::DARKGREY;
-  colors[RConsole::LIGHTBLUE] = RConsole::BLUE;
-  colors[RConsole::LIGHTGREEN] = RConsole::GREEN;
-  colors[RConsole::LIGHTCYAN] = RConsole::CYAN;
-  colors[RConsole::LIGHTRED] = RConsole::RED;
-  colors[RConsole::LIGHTMAGENTA] = RConsole::MAGENTA;
-  colors[RConsole::YELLOW] = RConsole::DARKGREY;
-  colors[RConsole::WHITE] = RConsole::GREY;
+  _fadeLookup[RConsole::BLACK] = RConsole::DARKGREY;
+  _fadeLookup[RConsole::BLUE] = RConsole::DARKGREY;
+  _fadeLookup[RConsole::GREEN] = RConsole::DARKGREY;
+  _fadeLookup[RConsole::CYAN] = RConsole::DARKGREY;
+  _fadeLookup[RConsole::RED] = RConsole::DARKGREY;
+  _fadeLookup[RConsole::MAGENTA] = RConsole::DARKGREY;
+  _fadeLookup[RConsole::BROWN] = RConsole::DARKGREY;
+  _fadeLookup[RConsole::GREY] = RConsole::DARKGREY;
+  _fadeLookup[RConsole::DARKGREY] = RConsole::DARKGREY;
+  _fadeLookup[RConsole::LIGHTBLUE] = RConsole::BLUE;
+  _fadeLookup[RConsole::LIGHTGREEN] = RConsole::GREEN;
+  _fadeLookup[RConsole::LIGHTCYAN] = RConsole::CYAN;
+  _fadeLookup[RConsole::LIGHTRED] = RConsole::RED;
+  _fadeLookup[RConsole::LIGHTMAGENTA] = RConsole::MAGENTA;
+  _fadeLookup[RConsole::YELLOW] = RConsole::DARKGREY;
+  _fadeLookup[RConsole::WHITE] = RConsole::GREY;
 
   RConsole::Canvas::FillCanvas(RConsole::RasterInfo('`', RConsole::DARKGREY));
 }
@@ -38,8 +39,11 @@ void ManagerGraphics::Update(UpdateInfo i)
 {
   // Get map and establish required adjustments.
   const Map& map = Engine::Instance->Get<ManagerLevel>()->GetCurrentMap();
-  size_t width = WIDTH_FUNC;
-  size_t height = HEIGHT_FUNC;
+  ManagerConfig *conf = Engine::Instance->Get<ManagerConfig>();
+
+  // Establish if resize occurred.
+  const size_t width = WIDTH_FUNC;
+  const size_t height = HEIGHT_FUNC;
   if (width != _width || height != _height)
   {
     RConsole::Canvas::ReInit(width, height);
@@ -47,23 +51,44 @@ void ManagerGraphics::Update(UpdateInfo i)
     _height = height;
     RConsole::Canvas::SetCursorVisible(false);
   }
+
+  // Configure for drawing.
+  const int halfWidth = width / 2;
+  const int halfHeight = height / 2;
   RConsole::Canvas::FillCanvas(RConsole::RasterInfo('`', RConsole::DARKGREY));
 
   // Start by drawing the rooms.
   for (const std::pair<Room, MapOffset> &r : map.Rooms)
   {
-    int startPosX = (width/2) + r.second.X - map.PlayerLoc.X;
-    int startPosY = (height/2) + r.second.Y - map.PlayerLoc.Y;
+    // Collect some initial values that won't be changing 
+    const int startPosX = halfWidth + r.second.X - map.PlayerLoc.X;
+    const int startPosY = halfHeight + r.second.Y - map.PlayerLoc.Y;
+    const int roomWidth = r.first.GetWidth();
+    const int roomHeight = r.first.GetHeight();
 
-    for (size_t i = 0; i < r.first.GetWidth(); ++i)
-      for (size_t j = 0; j < r.first.GetHeight(); ++j)
+    // Determine if we're in the room.
+    bool insideRoom = true;
+    if (halfWidth >= startPosX + roomWidth || halfWidth < startPosX)
+      insideRoom = false;
+    else if (halfHeight >= startPosY + roomHeight || halfHeight < startPosY)
+      insideRoom = false;
+
+    // Draw the room
+    for (int i = 0; i < roomWidth; ++i)
+      for (int j = 0; j < roomHeight; ++j)
       {
         const TileVisual &t = r.first.Tiles[i][j].Visual;
-        RConsole::Canvas::Draw(t.ASCII, static_cast<float>(startPosX + i), static_cast<float>(startPosY + j), t.ASCIIColor);
+        RConsole::Color color = t.ASCIIColor;
+        if (insideRoom == false)
+          color = _fadeLookup[color];
+
+        RConsole::Canvas::Draw(t.ASCII, static_cast<float>(startPosX + i), static_cast<float>(startPosY + j), color);
       }
 
   }
-  RConsole::Canvas::Draw('@', static_cast<float>(width/2), static_cast<float>(height/2), RConsole::WHITE);
+
+  std::string c = conf->GetValueAsString(KEY_GENERAL_PLAYER_ASCII);
+  RConsole::Canvas::Draw(c[0], static_cast<float>(halfWidth), static_cast<float>(halfHeight), RConsole::WHITE);
   RConsole::Canvas::Update();
 }
 

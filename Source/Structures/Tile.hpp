@@ -5,7 +5,11 @@
 #include "Structures/Entity.hpp"
 
 
-
+enum TileFlags
+{
+  WALL = 0,
+  DOOR = 2,
+};
 struct Tile
 {
   Tile () : RawRepresentation(' '), Visual(), TileContents() {  } 
@@ -14,4 +18,5 @@ struct Tile
   char RawRepresentation;
   TileVisual Visual;
   std::unordered_map<ID_Entity, Entity> TileContents;
+
 };

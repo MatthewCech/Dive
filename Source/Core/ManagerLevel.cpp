@@ -8,7 +8,7 @@
 
 void ManagerLevel::Init()
 {
-  const std::string &start_map = Engine::Instance->Get<ManagerConfig>()->GetValueAsString(GENERAL_START_MAP_KEY);
+  const std::string &start_map = Engine::Instance->Get<ManagerConfig>()->GetValueAsString(KEY_GENERAL_START_MAP);
   _maps.push_back(Engine::Instance->Get<ManagerWorld>()->GetMap(start_map));
   _currentMap = 0;
 }
