@@ -3,22 +3,73 @@
 #include "Utils/UtilsString.hpp"
 #include "Core/ManagerLevel.hpp"
 #include "Core/Engine.hpp"
+#include "Structures/TileFlags.hpp"
 
+
+
+enum DirectionRelative
+{
+  LEFT,
+  RIGHT,
+  UP,
+  DOWN
+};
+
+// Consider caching this!!!
+bool canMoveInDir(DirectionRelative dir, Map &map)
+{
+  // Evaluate movement roles here or in map
+  Tile *tile = nullptr;
+  switch (dir)
+  {
+  case DirectionRelative::UP:
+    tile = map.getTileAt({ map.PlayerLoc.X, map.PlayerLoc.Y - 1 });
+    break;
+  case DirectionRelative::LEFT:
+    tile = map.getTileAt({ map.PlayerLoc.X - 1, map.PlayerLoc.Y });
+    break;
+  case DirectionRelative::DOWN:
+    tile = map.getTileAt({ map.PlayerLoc.X, map.PlayerLoc.Y + 1 });
+    break;
+  case DirectionRelative::RIGHT:
+    tile = map.getTileAt({ map.PlayerLoc.X + 1, map.PlayerLoc.Y });
+    break;
+  }
+
+  if (tile == nullptr)
+    return true;
+
+  if ((tile->Flags & TileFlags::WALL))
+    return false;
+
+  return true;
+}
 void ManagerInput::Update(UpdateInfo i) 
 {
   if (KeyHit())
   {
     char c = GetChar();
     Map &map = Engine::Instance->Get<ManagerLevel>()->GetCurrentMap();
-    
 
     // Evaluate movement roles here or in map
     switch (tolower(c))
     {
-    case 'w': map.PlayerLoc.Y -= 1; break;
-    case 'a': map.PlayerLoc.X -= 1; break;
-    case 's': map.PlayerLoc.Y += 1; break;
-    case 'd': map.PlayerLoc.X += 1; break;
+    case 'w': 
+      if(canMoveInDir(DirectionRelative::UP, map))
+        map.PlayerLoc.Y -= 1; 
+      break;
+    case 'a': 
+      if (canMoveInDir(DirectionRelative::LEFT, map))
+        map.PlayerLoc.X -= 1; 
+      break;
+    case 's': 
+      if (canMoveInDir(DirectionRelative::DOWN, map))
+        map.PlayerLoc.Y += 1; 
+      break;
+    case 'd': 
+      if (canMoveInDir(DirectionRelative::RIGHT, map))
+        map.PlayerLoc.X += 1; 
+      break;
     }
   }
 }

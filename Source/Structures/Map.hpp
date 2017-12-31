@@ -18,7 +18,7 @@ struct Map
   {
     size_t width_offset = startRoom.GetWidth() / 2;
     size_t height_offset = startRoom.GetHeight() / 2;
-
+    startRoom.Visited = true;
     Rooms.push_back(std::make_pair(startRoom, MapPoint(PlayerLoc.X - width_offset, PlayerLoc.Y - height_offset)));
   }
 
@@ -32,9 +32,9 @@ struct Map
         continue;
       if (point.Y < pair.second.Y)
         continue;
-      if (pair.second.X + pair.first.GetWidth() < point.X)
+      if (pair.second.X + static_cast<int>(pair.first.GetWidth()) < point.X)
         continue;
-      if (pair.second.Y + pair.first.GetHeight() < point.Y)
+      if (pair.second.Y + static_cast<int>(pair.first.GetHeight()) < point.Y)
         continue;
 
       return &(pair.first.Tiles[point.X - pair.second.X][point.Y - pair.second.Y]);
@@ -42,6 +42,7 @@ struct Map
 
     return nullptr;
   }
+
   // Public member variables
   std::vector<std::pair<Room, MapPoint>> Rooms;
   MapPoint PlayerLoc;

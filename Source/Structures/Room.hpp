@@ -11,11 +11,13 @@ struct Room
   Room(size_t w, size_t h, const ID_Room &id)
     : Tiles(w, std::vector<Tile>(h))
     , ID(id)
+    , Visited(false)
   {  }
 
   Room()
     : Tiles(0, std::vector<Tile>(0))
     , ID()
+    , Visited(false)
   {  }
 
   size_t GetHeight() const
@@ -35,4 +37,5 @@ struct Room
 
   std::vector<std::vector<Tile>> Tiles;
   ID_Room ID;
+  bool Visited;
 };

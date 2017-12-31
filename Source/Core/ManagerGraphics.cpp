@@ -62,6 +62,10 @@ void ManagerGraphics::Update(UpdateInfo i)
   // Start by drawing the rooms.
   for (const std::pair<Room, MapPoint> &r : map.Rooms)
   {
+    // Skip unvisited rooms.
+    if (r.first.Visited == false)
+      continue;
+
     // Collect some initial values that won't be changing 
     const int startPosX = halfWidth + r.second.X - map.PlayerLoc.X;
     const int startPosY = halfHeight + r.second.Y - map.PlayerLoc.Y;
