@@ -1,17 +1,29 @@
-#include "Core/ManagerWorld.hpp"
-#include "Utils/UtilsString.hpp"
-#include "Core/Alert.hpp"
 #include <filesystem>
 #include <string>
 #include <fstream>
-
+#include "Core/ManagerWorld.hpp"
+#include "Utils/UtilsString.hpp"
+#include "Core/Alert.hpp"
+#include "Utils/UtilsFiles.hpp"
 
 
 // filesystem namespace for this file. Used because it is currently experiemntal.
 namespace fs = std::experimental::filesystem;
 
+static void verifyKey(const std::string &key, const std::string &filename, const std::unordered_map<std::string, std::string> &map)
+{
+  if (map.find("spawn") == map.end())
+    AlertMessage(filename + " does not have a key of type " + key + "!\n Not having this may be a serious issue. Continue?");
+}
+
 // Reads in all .room and .map files.
 void ManagerWorld::Init()
+{
+  loadRooms();
+  loadMaps();
+}
+
+void ManagerWorld::loadRooms()
 {
   for (auto &dirEntry : fs::directory_iterator("Resources/"))
   {
@@ -20,22 +32,22 @@ void ManagerWorld::Init()
     {
       std::string extension = dirEntry.path().extension().string();
       U_Lowercase(extension);
-      
+
       // Parse out rooms! Rooms are stored by name and data.
-      if (extension == "room")
+      if (extension == ".room")
       {
         // Parse name and make it case insensitive.
         ID_Room name;
         if (dirEntry.path().has_filename())
           name = dirEntry.path().filename().string();
         else
-          AlertMessage(L"You have a .room file that has no name.\nThis may cause issues if referenced. Proceed?");
+          AlertMessage("You have a .room file that has no name.\nThis may cause issues if referenced. Proceed?");
         U_Lowercase(name);
 
         // Open the file.
         std::fstream fileObject(dirEntry.path());
         if (!fileObject.is_open())
-          AlertMessage(L"One of the .room files failed to open.\nConfirm that nothing is open and try again!");
+          AlertMessage("The " + name + " .room file failed to open.\nConfirm that it is not open. Would you like to continue regardless?");
 
         // Parse. Size of vector will be map height. Each string will be up to max width.
         std::vector<std::string> lines;
@@ -48,33 +60,74 @@ void ManagerWorld::Init()
 
           lines.push_back(buffer);
         }
-        
+
         // A few sanity checks to ensure the room seems playable before proceeding, and has a unique name.
         if (lines.size() == 0 || longest == 0)
         {
-          AlertMessage(L"A .room file has either a width or height of 0! This will cause issues if referenced. Continue?");
+          AlertMessage("A .room file has either a width or height of 0! This will cause issues if referenced. Continue?");
           _rooms.insert(std::make_pair(name, Room(0, 0, name)));
           continue;
         }
         else if (lines.size() <= 2 || longest <= 2)
-          AlertMessage(L"A .room file seems impractically small, with either a width of height of <= 2. This may cause issues if referenced. Continue?");
+          AlertMessage(name + ".room file seems impractically small, with either a width of height of <= 2. This may cause issues if referenced. Continue?");
         else if (_rooms.find(name) != _rooms.end())
-          AlertMessage(L"You have two .room files with the same name!\nNote that capital letters do not differentiate names.\nIf you continue, the already read file will be overwritten. Continue?");
+          AlertMessage("You have two .room files with the same name: " + name + "!\nNote that capital letters do not differentiate names.\nIf you continue, the already read file will be overwritten. Continue?");
 
         // Create the room and store it under the name. At this point, name is unique
         Room room(longest, lines.size(), name);
         for (size_t y = 0; y < lines.size(); ++y)
           for (size_t x = 0; x < lines[y].length(); ++x)
             room.Tiles[x][y] = lines[y][x];
-        
+
         _rooms[name] = room;
       }
-      else if (extension == "map")
-      {
-        AlertMessage(L"Files with the .map extension are currently not supported.\nDo you want to proceed?");
-
-      }
     }
-    DEBUG_PRINT(dirEntry.path());
   }
 }
+
+void ManagerWorld::loadMaps()
+{
+  for (auto &dirEntry : fs::directory_iterator("Resources/"))
+  {
+    // Confirm the file has an extension. This is what we'll be going for regardless of OS.
+    if (dirEntry.path().has_extension())
+    {
+      std::string extension = dirEntry.path().extension().string();
+      U_Lowercase(extension);
+
+      if (extension == ".map")
+      {
+        ID_Room name;
+        if (dirEntry.path().has_filename())
+          name = dirEntry.path().filename().string();
+        else
+          AlertMessage("You have a .map file that has no name.\nThis may cause issues if referenced. Proceed?");
+
+        // Parse the map then make it lowercase.
+        std::unordered_map<std::string, std::string> parsed = ParseResourceFile(name);
+        U_Lowercase(name);
+
+        const char spawn[] = "spawn";
+        verifyKey("width", name, parsed);
+        verifyKey("height", name, parsed);
+        verifyKey(spawn, name, parsed); // perhaps not required...
+
+        auto iter = _rooms.find(parsed[spawn]);
+        if (iter == _rooms.end())
+          AlertMessage("The specified room, " + parsed[spawn] + ", could not be found!\n Please verify that .room file is in the resources folder!\nTry to continue?");
+
+        // get specific values then initialize.
+        double width = std::stod(parsed["width"]);
+        double height = std::stod(parsed["height"]);
+        Map map(static_cast<int>(width), static_cast<int>(height), name, iter->second);
+        _maps[name] =  map;
+      }
+    }
+  }
+}
+
+Map &ManagerWorld::GetMap(ID_Map m)
+{
+  return _maps[m];
+}
+

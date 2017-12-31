@@ -51,14 +51,14 @@ void Engine::init()
   if (Instance == nullptr)
     Instance = this;
   else
-    AlertMessage(L"Attempted to re-create the engine! Continue?");
+    AlertMessage("Attempted to re-create the engine! Continue?");
 }
 
 void Engine::verifyInit()
 {
   if (Instance == nullptr)
   {
-    AlertMessage(L"Engine has not been initialized yet!\nWould you like to do so now?");
+    AlertMessage("Engine has not been initialized yet!\nWould you like to do so now?");
     Instance = new Engine();
   }
 }

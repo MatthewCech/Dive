@@ -13,5 +13,5 @@ public:
   // Primary Functions
   virtual void Init() { };
   virtual void Update(UpdateInfo i) { };
-  virtual void Shutdown() { };
+  virtual void Shutdown() { DEBUG_PRINT("Shutting down: " << typeid(*this).name()); };
 };

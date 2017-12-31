@@ -46,8 +46,9 @@ void Engine::Add()
   m->Init(); 
   
   auto iter = Instance->_managers.find(typeid(T));
+
   if(iter != Instance->_managers.end())
-    AlertMessage(L"You are trying to add two of the same type of manager!\nThis may cause unexpected Behavior. Continue?");
+    AlertMessage("You are trying to add two of the same type of manager!\nThis may cause unexpected Behavior. Continue?");
 
   Instance->_managers[typeid(T)] = m;
   Instance->_managersOrdered.push_back(m);
