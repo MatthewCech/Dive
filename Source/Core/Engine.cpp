@@ -28,7 +28,7 @@ bool Engine::Update()
   for (size_t i = 0; i < Instance->_managersOrdered.size(); ++i)
     Instance->_managersOrdered[i]->Update({ 0.016 });
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(5));
+  std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
   return true;
 }
