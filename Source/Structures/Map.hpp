@@ -1,7 +1,7 @@
 #pragma once
 #include "Structures/Room.hpp"
 #include <utility> // std::make_pair
-
+#include <unordered_map>
 
 struct MapOffset
 {
@@ -12,6 +12,8 @@ struct MapOffset
 };
 struct Map
 {
+  Map() : Rooms(), StartLocation(), ID("") {  }
+
   // invoke copy constructor for rooms explicitly.
   Map(size_t w, size_t h, const ID_Map &id, Room startRoom)
     : Rooms()
