@@ -7,7 +7,7 @@ class ManagerLevel : public ManagerBase
 {
 public:
   void Init();
-  void Update(UpdateInfo i) { DEBUG_PRINT(__FUNCDNAME__); }
+  void Update(UpdateInfo i) {}
   void AddMap(const Map &rhs);
   Map &GetCurrentMap();
 

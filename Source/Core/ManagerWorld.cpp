@@ -77,7 +77,10 @@ void ManagerWorld::loadRooms()
         Room room(longest, lines.size(), name);
         for (size_t y = 0; y < lines.size(); ++y)
           for (size_t x = 0; x < lines[y].length(); ++x)
-            room.Tiles[x][y] = lines[y][x];
+          {
+            room.Tiles[x][y].RawRepresentation = lines[y][x];
+            room.Tiles[x][y].Visual.ASCII = lines[y][x];
+          }
 
         _rooms[name] = room;
       }

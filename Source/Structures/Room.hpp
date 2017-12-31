@@ -18,7 +18,7 @@ struct Room
     , ID()
   {  }
 
-  size_t GetHeight()
+  size_t GetHeight() const
   {
     size_t widest = 0;
     for (size_t i = 0; i < Tiles.size(); ++i)
@@ -28,7 +28,7 @@ struct Room
     return widest;
   }
 
-  size_t GetWidth()
+  size_t GetWidth() const
   {
     return Tiles.size();
   }

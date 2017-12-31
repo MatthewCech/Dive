@@ -8,7 +8,7 @@ class ManagerConfig : public ManagerBase
 {
 public:
   void Init();
-  void Update(UpdateInfo i) { DEBUG_PRINT(__FUNCDNAME__); }
+  void Update(UpdateInfo i) { }
 
   void SetValue(const std::string &key, std::string value);
   std::string GetValueAsString(const std::string &key);

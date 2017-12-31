@@ -7,7 +7,10 @@
 class ManagerGraphics : public ManagerBase
 {
 public:
-  void Init() { DEBUG_PRINT(__FUNCDNAME__); }
-  void Update(UpdateInfo i) { DEBUG_PRINT(__FUNCDNAME__); }
+  void Init();
+  void Update(UpdateInfo i);
 
+private:
+  size_t _width;
+  size_t _height;
 };

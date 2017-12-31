@@ -4,7 +4,7 @@
 
 struct TileVisual
 {
-  TileVisual() : ASCII(0), ImagePath("") { }
+  TileVisual() : ASCII(' '), ImagePath("") { }
 
   char ASCII;
   std::string ImagePath;

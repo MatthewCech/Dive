@@ -22,7 +22,7 @@ int main(int argc, char** argv)
   Engine::Instance->Add<ManagerGraphics>();
 
   // Primary Loop
-  while (Engine::Instance->Update()) { break; }
+  while (Engine::Instance->Update()); //{ break; }
 
   // Hold at termination, as this is abnormal behavior.
   Engine::Instance->Shutdown();

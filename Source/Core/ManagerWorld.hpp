@@ -11,7 +11,7 @@ class ManagerWorld : public ManagerBase
 {
 public:
   void Init();
-  void Update(UpdateInfo i) { DEBUG_PRINT(__FUNCDNAME__); }
+  void Update(UpdateInfo i) {}
   Map &GetMap(ID_Map);
 
 private:

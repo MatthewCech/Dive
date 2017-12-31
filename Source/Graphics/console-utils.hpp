@@ -11,6 +11,8 @@
 #define UNUSED(x) (void)(x)
 #define DEFAULT_WIDTH_SIZE (rlutil::tcols() - 1)
 #define DEFAULT_HEIGHT_SIZE (rlutil::trows() - 1)
+#define WIDTH_FUNC (rlutil::tcols() - 1)
+#define HEIGHT_FUNC (rlutil::trows() - 1)
 
 ///////////////////////////////////////////////////////////////////////
 //rlutil.h
@@ -1171,6 +1173,7 @@ namespace RConsole
     // Data related calls
     static unsigned int GetConsoleWidht();
     static unsigned int GetConsoleHeight();
+    static void fullClear();
   private:
     // Hidden Constructors- no instantiating publicly!
     Canvas() { };
@@ -1178,7 +1181,6 @@ namespace RConsole
     
     // Private methods.
     static void clearPrevious();
-    static void fullClear();
     static void setColor(const Color &color);
     static bool writeRaster(CanvasRaster &r);
     static int  putC(int character, FILE * stream );

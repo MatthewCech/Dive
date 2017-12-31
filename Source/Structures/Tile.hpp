@@ -8,7 +8,7 @@
 
 struct Tile
 {
-  Tile () : RawRepresentation(0), Visual(), TileContents() {  } 
+  Tile () : RawRepresentation(' '), Visual(), TileContents() {  } 
   Tile (char representation) : RawRepresentation(representation) {  }
   
   char RawRepresentation;
