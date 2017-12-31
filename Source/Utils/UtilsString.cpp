@@ -10,3 +10,10 @@ std::string U_Lowercase(std::string &str)
   std::transform(str.begin(), str.end(), str.begin(), tolower);
   return str;
 }
+
+bool U_IsWhitespace(char c)
+{
+  if (c == WHITESPACE_SPACE || c == WHITESPACE_TAB)
+    return true;
+  return false;
+}
