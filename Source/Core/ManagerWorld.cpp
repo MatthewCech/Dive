@@ -7,10 +7,14 @@
 #include "Utils/UtilsFiles.hpp"
 #include "Core/Engine.hpp"
 #include "Core/ManagerConfig.hpp"
+#include "Structures/TileFlags.hpp"
+
 
 // filesystem namespace for this file. Used because it is currently experiemntal.
 namespace fs = std::experimental::filesystem;
 
+
+// Verify that a map has a specific key.
 static void verifyKey(const std::string &key, const std::string &filename, const std::unordered_map<std::string, std::string> &map)
 {
   if (map.find("spawn") == map.end())
@@ -24,6 +28,8 @@ void ManagerWorld::Init()
   loadMaps();
 }
 
+
+// Loads every file with a .room extension and parses it.
 void ManagerWorld::loadRooms()
 {
   const ManagerConfig* mconf = Engine::Instance->Get<ManagerConfig>();
@@ -81,10 +87,13 @@ void ManagerWorld::loadRooms()
         for (size_t y = 0; y < lines.size(); ++y)
           for (size_t x = 0; x < lines[y].length(); ++x)
           {
-            room.Tiles[x][y].RawRepresentation = lines[y][x];
-            room.Tiles[x][y].Visual.ASCII = lines[y][x];
-            char c = room.Tiles[x][y].Visual.ASCII;
-            room.Tiles[x][y].Visual.ASCIIColor = mconf->GetCharAsColor(c);
+            Tile &tile = room.Tiles[x][y];
+
+            tile.RawRepresentation = lines[y][x];
+            tile.Visual.ASCII = lines[y][x];
+            char c = tile.Visual.ASCII;
+            tile.Visual.ASCIIColor = mconf->GetCharAsColor(c);
+            addTileFlags(tile);
           }
 
         _rooms[name] = room;
@@ -93,6 +102,8 @@ void ManagerWorld::loadRooms()
   }
 }
 
+
+// Loads every file with a .map extension
 void ManagerWorld::loadMaps()
 {
   for (auto &dirEntry : fs::directory_iterator("Resources/"))
@@ -138,7 +149,23 @@ Map &ManagerWorld::GetMap(ID_Map m)
   return _maps[m];
 }
 
+
+// Add flags to the tiles as necessary.
+static void AddFlagIfNeeded(ManagerConfig *mconf, Tile &t, std::string key)
+{
+  std::string validChars = mconf->GetValueAsString(KEY_GENERAL_FLAG_WALL);
+  for (int i = 0; i < validChars.size(); ++i)
+    if (validChars[i] == t.RawRepresentation)
+      t.Flags |= TileFlags::WALL;
+}
 void ManagerWorld::addTileFlags(Tile &t)
 {
+  ManagerConfig *mconf = Engine::Instance->Get<ManagerConfig>();
+  std::string validChars;
 
+  AddFlagIfNeeded(mconf, t, KEY_GENERAL_FLAG_WALL);
+  AddFlagIfNeeded(mconf, t, KEY_GENERAL_FLAG_DOOR);
+  AddFlagIfNeeded(mconf, t, KEY_GENERAL_FLAG_GRASS);
+  AddFlagIfNeeded(mconf, t, KEY_GENERAL_FLAG_WATER);
+  AddFlagIfNeeded(mconf, t, KEY_GENERAL_FLAG_FIRE);
 }

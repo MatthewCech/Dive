@@ -5,13 +5,8 @@
 #include "Structures/Entity.hpp"
 
 
-enum TileFlags
-{
-  WALL = 1,
-  DOOR = 2,
-  GRASS = 4,
-  WATER = 8
-};
+
+
 struct Tile
 {
   // Constructors
