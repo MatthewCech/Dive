@@ -10,7 +10,7 @@ void ManagerInput::Update(UpdateInfo i)
   {
     char c = GetChar();
     Map &map = Engine::Instance->Get<ManagerLevel>()->GetCurrentMap();
-
+    
 
     // Evaluate movement roles here or in map
     switch (tolower(c))
