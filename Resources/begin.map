@@ -1,0 +1,11 @@
+# Map configuration file. 
+# Color configuration may happen here.
+
+# Map sizing
+
+	width:100
+	height:100
+
+# Specified spawn
+
+	spawn:start.room
