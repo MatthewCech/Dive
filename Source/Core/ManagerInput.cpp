@@ -23,16 +23,16 @@ bool canMoveInDir(DirectionRelative dir, Map &map)
   switch (dir)
   {
   case DirectionRelative::UP:
-    tile = map.getTileAt({ map.PlayerLoc.X, map.PlayerLoc.Y - 1 });
+    tile = map.GetTileAt({ map.PlayerLoc.X, map.PlayerLoc.Y - 1 });
     break;
   case DirectionRelative::LEFT:
-    tile = map.getTileAt({ map.PlayerLoc.X - 1, map.PlayerLoc.Y });
+    tile = map.GetTileAt({ map.PlayerLoc.X - 1, map.PlayerLoc.Y });
     break;
   case DirectionRelative::DOWN:
-    tile = map.getTileAt({ map.PlayerLoc.X, map.PlayerLoc.Y + 1 });
+    tile = map.GetTileAt({ map.PlayerLoc.X, map.PlayerLoc.Y + 1 });
     break;
   case DirectionRelative::RIGHT:
-    tile = map.getTileAt({ map.PlayerLoc.X + 1, map.PlayerLoc.Y });
+    tile = map.GetTileAt({ map.PlayerLoc.X + 1, map.PlayerLoc.Y });
     break;
   }
 

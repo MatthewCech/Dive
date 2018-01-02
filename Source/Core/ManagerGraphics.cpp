@@ -49,9 +49,10 @@ void ManagerGraphics::Update(UpdateInfo i)
   if (width != _width || height != _height)
   {
     RConsole::Canvas::ReInit(width, height);
+    RConsole::Canvas::SetCursorVisible(false);
+    RConsole::Canvas::fullClear();
     _width = width;
     _height = height;
-    RConsole::Canvas::SetCursorVisible(false);
   }
 
   // Configure for drawing.

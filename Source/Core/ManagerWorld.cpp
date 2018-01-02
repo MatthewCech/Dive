@@ -128,7 +128,8 @@ void ManagerWorld::loadMaps()
 
         verifyKey(KEY_MAP_WIDTH, name, parsed);
         verifyKey(KEY_MAP_HEIGHT, name, parsed);
-        verifyKey(KEY_MAP_START, name, parsed); // perhaps not required...
+        verifyKey(KEY_MAP_START, name, parsed);          // perhaps not required...
+        verifyKey(KEY_MAP_ROOM_SELECTION, name, parsed); // perhaps not required...
 
         auto iter = _rooms.find(parsed[KEY_MAP_START]);
         if (iter == _rooms.end())
@@ -138,6 +139,38 @@ void ManagerWorld::loadMaps()
         double width = std::stod(parsed["width"]);
         double height = std::stod(parsed["height"]);
         Map map(static_cast<int>(width), static_cast<int>(height), name, iter->second);
+
+        // Try and parse out the rooms specified, split on delimiter and prepare to load them.
+        std::string rooms = parsed[KEY_MAP_ROOM_SELECTION];
+        std::vector<std::string> room_names;
+        size_t loc = rooms.find_first_of(DELIM_MAP_ROOMS);
+        if (loc == rooms.npos && rooms.size() > 0)
+          room_names.push_back(rooms);
+
+        while (loc != rooms.npos)
+        {
+          const std::string name = rooms.substr(0, loc);
+          if (name.size() == 0)
+            AlertMessage("Inside " + name + " there are incorrectly formatted room delimiters\nfor key " + KEY_MAP_ROOM_SELECTION + " in the form of the '" + DELIM_MAP_ROOMS + "' symbol.\nTry to continue?");
+
+          room_names.push_back(name);
+          size_t newloc = rooms.find_first_of(DELIM_MAP_ROOMS);
+          if(newloc != rooms.npos)
+            rooms = rooms.substr(loc + 1);
+          loc = newloc;
+        }
+
+        // Attempt to load rooms.
+        for (const std::string &roomName : room_names)
+        {
+          auto iter = _rooms.find(roomName);
+          if (iter != _rooms.end())
+            map.AddRoomRandomly(iter->second);
+          else
+            AlertMessage("Could not find room " + roomName + " in loaded\nrooms in " + name + ". Try to continue?");
+        }
+
+        // Store the map.
         _maps[name] =  map;
       }
     }

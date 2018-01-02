@@ -16,6 +16,7 @@ typedef std::string ID_Room;
 #define KEY_MAP_START "spawn"
 #define KEY_MAP_WIDTH "width"
 #define KEY_MAP_HEIGHT "height"
+#define KEY_MAP_ROOM_SELECTION "rooms"
 
 // flags in general
 #define KEY_GENERAL_FLAG_WALL "wall"
@@ -23,3 +24,6 @@ typedef std::string ID_Room;
 #define KEY_GENERAL_FLAG_GRASS "grass"
 #define KEY_GENERAL_FLAG_WATER "water"
 #define KEY_GENERAL_FLAG_FIRE  "fire"
+
+// Delimiters
+#define DELIM_MAP_ROOMS '|'

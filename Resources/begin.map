@@ -9,3 +9,4 @@
 # Specified spawn
 
 	spawn:start.room
+	rooms:testset_1.room|testset_2.room

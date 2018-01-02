@@ -22,26 +22,9 @@ struct Map
     Rooms.push_back(std::make_pair(startRoom, MapPoint(PlayerLoc.X - width_offset, PlayerLoc.Y - height_offset)));
   }
 
-  // Get a tile at a specific location.
-  Tile *getTileAt(MapPoint point)
-  {
-    for (auto &pair : Rooms)
-    {
-      // See if we can skip this room
-      if (point.X < pair.second.X)
-        continue;
-      if (point.Y < pair.second.Y)
-        continue;
-      if (pair.second.X + static_cast<int>(pair.first.GetWidth()) < point.X)
-        continue;
-      if (pair.second.Y + static_cast<int>(pair.first.GetHeight()) < point.Y)
-        continue;
-
-      return &(pair.first.Tiles[point.X - pair.second.X][point.Y - pair.second.Y]);
-    }
-
-    return nullptr;
-  }
+  // Public member functions
+  Tile *GetTileAt(MapPoint point);
+  void AddRoomRandomly(Room toAdd);
 
   // Public member variables
   std::vector<std::pair<Room, MapPoint>> Rooms;
