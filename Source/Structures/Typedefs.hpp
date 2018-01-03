@@ -17,6 +17,7 @@ typedef std::string ID_Room;
 #define KEY_MAP_WIDTH "width"
 #define KEY_MAP_HEIGHT "height"
 #define KEY_MAP_ROOM_SELECTION "rooms"
+#define KEY_MAP_ROOM_COUNT "roomcount"
 
 // flags in general
 #define KEY_GENERAL_FLAG_WALL "wall"

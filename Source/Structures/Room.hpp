@@ -1,6 +1,8 @@
 #pragma once
 #include "Structures/Tile.hpp"
 #include "Structures/Typedefs.hpp"
+#include "Structures/MapPoint.hpp"
+
 
 
 // A room is a collection of tiles and an ID.
@@ -11,23 +13,21 @@ struct Room
   Room(size_t w, size_t h, const ID_Room &id)
     : Tiles(w, std::vector<Tile>(h))
     , ID(id)
-    , Visited(false)
+    , Visited(true)//, Visited(false)
   {  }
 
   Room()
     : Tiles(0, std::vector<Tile>(0))
     , ID()
-    , Visited(false)
+    , Visited(true)//, Visited(false)
   {  }
 
   size_t GetHeight() const
   {
-    size_t widest = 0;
-    for (size_t i = 0; i < Tiles.size(); ++i)
-      if (Tiles[i].size() > widest)
-        widest = Tiles[i].size();
+    if (Tiles.size() > 0)
+      return Tiles[0].size();
 
-    return widest;
+    return 0;
   }
 
   size_t GetWidth() const
@@ -36,6 +36,7 @@ struct Room
   }
 
   std::vector<std::vector<Tile>> Tiles;
+
   ID_Room ID;
   bool Visited;
 };

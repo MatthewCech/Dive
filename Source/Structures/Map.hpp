@@ -7,27 +7,24 @@
 
 struct Map
 {
-  // Constructor
-  Map() : Rooms(), PlayerLoc(), ID("") {  }
-
-  // invoke copy constructor for rooms explicitly.
-  Map(size_t w, size_t h, const ID_Map &id, Room startRoom)
-    : Rooms()
-    , PlayerLoc()
-    , ID(id)
-  {
-    size_t width_offset = startRoom.GetWidth() / 2;
-    size_t height_offset = startRoom.GetHeight() / 2;
-    startRoom.Visited = true;
-    Rooms.push_back(std::make_pair(startRoom, MapPoint(PlayerLoc.X - width_offset, PlayerLoc.Y - height_offset)));
-  }
+  // Constructors.
+  Map();
+  Map(size_t w, size_t h, const ID_Map &id, const Room &startRoom);
 
   // Public member functions
-  Tile *GetTileAt(MapPoint point);
-  void AddRoomRandomly(Room toAdd);
+  std::pair<Tile *, Room *> GetTileAt(MapPoint point);
+  void AddRoomRandomly(const Room &toUse);
 
   // Public member variables
-  std::vector<std::pair<Room, MapPoint>> Rooms;
-  MapPoint PlayerLoc;
-  ID_Map ID;
+  std::vector<std::pair<Room *, MapPoint>> Rooms; // The rooms, stored in a vector as pairs.
+  MapPoint PlayerLoc;                             // The player location in the map according to the map.
+  ID_Map ID;                                      // The identifier for the map: The name of it.
+
+private:
+  // Private member functions
+  void pushRoom(Room *room, MapPoint m);
+
+  // Private member variables
+  // Hashtable because this really has no defined size
+  std::unordered_map<MapPoint, std::pair<Tile *, Room *>, MapPointHash> _roomsByPoint; // Internal tracking
 };
