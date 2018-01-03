@@ -130,6 +130,7 @@ void ManagerWorld::loadMaps()
         verifyKey(KEY_MAP_HEIGHT, name, parsed);
         verifyKey(KEY_MAP_START, name, parsed);          // perhaps not required...
         verifyKey(KEY_MAP_ROOM_SELECTION, name, parsed); // perhaps not required...
+        verifyKey(KEY_MAP_ROOM_COUNT, name, parsed);
 
         auto iter = _rooms.find(parsed[KEY_MAP_START]);
         if (iter == _rooms.end())
@@ -144,9 +145,12 @@ void ManagerWorld::loadMaps()
         std::string rooms = parsed[KEY_MAP_ROOM_SELECTION];
         std::vector<std::string> room_names;
         size_t loc = rooms.find_first_of(DELIM_MAP_ROOMS);
+
+        // Single, non-delimited item.
         if (loc == rooms.npos && rooms.size() > 0)
           room_names.push_back(rooms);
 
+        // White loop for multiple delimited items.
         while (loc != rooms.npos)
         {
           const std::string name = rooms.substr(0, loc);
@@ -160,14 +164,26 @@ void ManagerWorld::loadMaps()
           loc = newloc;
         }
 
-        // Attempt to load rooms.
-        for (const std::string &roomName : room_names)
+        // Attempt to load rooms, once per room.
+        //for (const std::string &roomName : room_names)
+        //{
+        //  auto iter = _rooms.find(roomName);
+        //  if (iter != _rooms.end())
+        //    map.AddRoomRandomly(iter->second);
+        //  else
+        //    AlertMessage("Could not find room " + roomName + " in loaded\nrooms in " + name + ". Try to continue?");
+        //}
+
+        // Attempt to load rooms randomly.
+        int numRooms = std::stoi(parsed[KEY_MAP_ROOM_COUNT]);
+        for (int i = 0; i < numRooms; ++i)
         {
-          auto iter = _rooms.find(roomName);
+          int loc = rand() % room_names.size();
+          auto iter = _rooms.find(room_names[loc]);
           if (iter != _rooms.end())
             map.AddRoomRandomly(iter->second);
           else
-            AlertMessage("Could not find room " + roomName + " in loaded\nrooms in " + name + ". Try to continue?");
+            AlertMessage("Could not find room " + room_names[loc] + " in loaded\nrooms in " + name + ". Try to continue?");
         }
 
         // Store the map.

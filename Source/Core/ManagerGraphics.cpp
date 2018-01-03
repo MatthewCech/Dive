@@ -61,17 +61,21 @@ void ManagerGraphics::Update(UpdateInfo i)
   RConsole::Canvas::FillCanvas(RConsole::RasterInfo('`', RConsole::DARKGREY));
 
   // Start by drawing the rooms.
-  for (const std::pair<Room, MapPoint> &r : map.Rooms)
+  for (const std::pair<Room *, MapPoint> &r : map.Rooms)
   {
+    // Ease of use vars
+    const Room &room = *r.first;
+    const MapPoint &loc = r.second;
+
     // Skip unvisited rooms.
-    if (r.first.Visited == false)
+    if (room.Visited == false)
       continue;
 
     // Collect some initial values that won't be changing 
-    const int startPosX = halfWidth + r.second.X - map.PlayerLoc.X;
-    const int startPosY = halfHeight + r.second.Y - map.PlayerLoc.Y;
-    const int roomWidth = r.first.GetWidth();
-    const int roomHeight = r.first.GetHeight();
+    const int startPosX = halfWidth + loc.X - map.PlayerLoc.X;
+    const int startPosY = halfHeight + loc.Y - map.PlayerLoc.Y;
+    const int roomWidth = room.GetWidth();
+    const int roomHeight = room.GetHeight();
 
     // Determine if we're in the room.
     bool insideRoom = true;
@@ -85,7 +89,7 @@ void ManagerGraphics::Update(UpdateInfo i)
       for (int j = 0; j < roomHeight; ++j)
       {
         // Value collection
-        const Tile &tile = r.first.Tiles[i][j];
+        const Tile &tile = room.Tiles[i][j];
         const TileVisual &tileVisual = tile.Visual;
         char ascii = tileVisual.ASCII;
 

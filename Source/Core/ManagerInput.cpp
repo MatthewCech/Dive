@@ -19,7 +19,7 @@ enum DirectionRelative
 bool canMoveInDir(DirectionRelative dir, Map &map)
 {
   // Evaluate movement roles here or in map
-  Tile *tile = nullptr;
+  std::pair<Tile *, Room *> tile;
   switch (dir)
   {
   case DirectionRelative::UP:
@@ -36,10 +36,12 @@ bool canMoveInDir(DirectionRelative dir, Map &map)
     break;
   }
 
-  if (tile == nullptr)
+  if (tile.first == nullptr)
     return true;
 
-  if ((tile->Flags & TileFlags::WALL))
+  tile.second->Visited = true;
+
+  if ((tile.first->Flags & TileFlags::WALL))
     return false;
 
   return true;
